@@ -1,0 +1,10 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: URLShortenerService
+  data:
+    mongodb:
+      uri: mongodb+srv://neelmehta0086:neel123@cluster0.m2wrdct.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      database: urlshortener
