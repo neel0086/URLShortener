@@ -1,0 +1,10 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: URLRedirectionService
+  data:
+    mongodb:
+      uri: mongodb+srv://neelmehta0086:neel123@cluster0.m2wrdct.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      database: urlshortener

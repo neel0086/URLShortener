@@ -22,23 +22,18 @@ public class UrlShortenerService {
 
     private final String DOMAIN = "http://short.est/";
 
-    public UrlResponse shortenUrl(UrlRequest urlShortenerRequest){
+    public UrlResponse shortenUrl(UrlRequest urlShortenerRequest) {
         long counter = counterService.getNextCounter();
         String shortKey = encodeBase62(counter);
-        String shortUrl = DOMAIN+shortKey;
 
         UrlMapping urlMapping = new UrlMapping();
         urlMapping.setOriginalUrl(urlShortenerRequest.getOriginalUrl());
-        urlMapping.setShortUrl(shortUrl);
+        urlMapping.setShortKey(shortKey);
         urlShortenerRepository.save(urlMapping);
 
-        return new UrlResponse(shortUrl);
+        return new UrlResponse(DOMAIN + shortKey);
 
 
-    }
-    public String getOriginalUrl(String shortKey){
-        UrlMapping mapping = urlShortenerRepository.findByShortUrl(shortKey);
-        return mapping!=null ? mapping.getOriginalUrl() : null;
     }
 
     public String encodeBase62(long num) {

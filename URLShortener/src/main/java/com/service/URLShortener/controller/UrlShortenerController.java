@@ -20,19 +20,4 @@ public class UrlShortenerController {
     public ResponseEntity<UrlResponse> shortenUrl(@RequestBody UrlRequest urlRequest){
         return ResponseEntity.ok(urlShortenerService.shortenUrl(urlRequest));
     }
-
-    @GetMapping("/{shortKey}")
-    public ResponseEntity<String> getOriginalUrl(@PathVariable String shortKey){
-        String originalUrl = urlShortenerService.getOriginalUrl(shortKey);
-        if(originalUrl!=null){
-            return ResponseEntity.ok(originalUrl);
-        }
-        else{
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-
-
-
 }

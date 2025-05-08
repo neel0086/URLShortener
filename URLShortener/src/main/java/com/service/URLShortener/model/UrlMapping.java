@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(value="UrlMapping")
+@Document(value="urlMapping")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -17,5 +17,5 @@ public class UrlMapping {
     @Id
     private String id;
     private String originalUrl;
-    private String shortUrl;
+    private String shortKey;
 }
