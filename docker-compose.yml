@@ -1,0 +1,62 @@
+version: "3.9"
+
+services:
+  # Eureka Server (ServiceRegistry)
+  eureka-server:
+    build:
+      context: ./ServiceRegistry
+    ports:
+      - "8761:8761"
+    networks:
+      - urlshortener-net
+    environment:
+      - spring.application.name=service-registry
+      - eureka.client.fetch-registry=false
+      - eureka.client.register-with-eureka=false
+
+  # URL Shortener Service
+  urlshortener:
+    build:
+      context: ./UrlShortener
+    # ports:
+    #   - "8080:8080"
+    networks:
+      - urlshortener-net
+    depends_on:
+      - eureka-server
+    environment:
+      - spring.application.name=URL-SHORTENER
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8761/eureka/
+  
+
+  # URL Redirection Service
+  urlredirection:
+    build:
+      context: ./UrlRedirection
+    # ports:
+    #   - "8081:8081"
+    networks:
+      - urlshortener-net
+    depends_on:
+      - eureka-server
+    environment:
+      - spring.application.name=URL-REDIRECTION
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8761/eureka/
+  
+  
+  apigateway:
+    build:
+      context: ./ApiGateway
+    ports:
+      - "8084:8084"
+    networks:
+      - urlshortener-net
+    depends_on:
+      - eureka-server
+    environment:
+      - spring.application.name=API-GATEWAY
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8761/eureka/
+
+networks:
+  urlshortener-net:
+    driver: bridge

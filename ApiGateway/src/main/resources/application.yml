@@ -1,0 +1,30 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: API-GATEWAY
+
+  cloud:
+    gateway:
+      routes:
+        - id: URL-SHORTENER
+          uri: lb://URL-SHORTENER
+          predicates:
+            - Path=/api/urlshortener/**
+
+        - id: URL-REDIRECTION
+          uri: lb://URL-REDIRECTION
+          predicates:
+            - Path=/api/urlredirection/**
+
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: localhost
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka

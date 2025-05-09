@@ -17,6 +17,11 @@ public class UrlRedirectionController {
     @Autowired
     private final UrlRedirectionService urlRedirectionService;
 
+    @GetMapping("/")
+    public ResponseEntity<String> entryCheck(){
+        return ResponseEntity.ok("Inside the URL Redirection");
+    }
+
     @GetMapping("/{shortKey}")
     public ResponseEntity<String> getOriginalUrl(@PathVariable String shortKey){
         String originalUrl = urlRedirectionService.getOriginalUrl(shortKey);
