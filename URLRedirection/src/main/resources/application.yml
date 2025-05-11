@@ -8,6 +8,11 @@ spring:
     mongodb:
       uri: mongodb+srv://neelmehta0086:neel123@cluster0.m2wrdct.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
       database: urlshortener
+    redis:
+      host: redis
+      port: 6379
+      password: neel123
+
   eureka:
     instance:
       prefer-ip-address: true
