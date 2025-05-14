@@ -21,14 +21,11 @@ public class UrlRedirectionService {
     private final RedisTemplate<String, String> redisTemplate;
 
     public String getOriginalUrl(String shortKey){
-        System.out.println("Reched in service");
 
         String cachedUrl = redisTemplate.opsForValue().get(shortKey);
-        System.out.println("Reched insiilise");
 
         if(cachedUrl != null){
-            log.info("Redis cache hit for key", shortKey);
-            return cachedUrl;
+             return cachedUrl;
 
         }
 
