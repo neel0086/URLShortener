@@ -9,7 +9,7 @@ WORKDIR /app
 COPY target/URLShortener-0.0.1-SNAPSHOT.jar url-shortener.jar
 
 # Expose the port the service will run on
-EXPOSE 8081
+EXPOSE 8080
 
 # Run the service
 ENTRYPOINT ["java", "-jar", "url-shortener.jar"]

@@ -6,10 +6,10 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copy the built .jar file into the container
-COPY target/URLRedirection-0.0.1-SNAPSHOT.jar url-redirection.jar
+COPY target/URLAnalytics-0.0.1-SNAPSHOT.jar url-analytics.jar
 
 # Expose the port the service will run on
-EXPOSE 8081
+EXPOSE 8082
 
 # Run the service
-ENTRYPOINT ["java", "-jar", "url-redirection.jar"]
+ENTRYPOINT ["java", "-jar", "url-analytics.jar"]

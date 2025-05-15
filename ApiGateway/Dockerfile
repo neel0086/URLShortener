@@ -9,7 +9,7 @@ WORKDIR /app
 COPY target/ApiGateway-0.0.1-SNAPSHOT.jar api-gateway.jar
 
 # Expose the port the API Gateway will run on
-EXPOSE 8080
+EXPOSE 8084
 
 # Run the API Gateway
 ENTRYPOINT ["java", "-jar", "api-gateway.jar"]

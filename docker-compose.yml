@@ -28,6 +28,19 @@ services:
       - spring.application.name=URL-SHORTENER
       - eureka.client.serviceUrl.defaultZone=http://eureka-server:8761/eureka/
   
+  urlanalytics:
+    build:
+      context: ./UrlAnalytics
+    # ports:
+    #   - "8080:8080"
+    networks:
+      - urlshortener-net
+    depends_on:
+      - eureka-server
+    environment:
+      - spring.application.name=URL-ANALYTICS
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8761/eureka/
+  
 
   # URL Redirection Service
   urlredirection:
