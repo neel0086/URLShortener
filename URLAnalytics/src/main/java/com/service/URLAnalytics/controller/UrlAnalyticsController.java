@@ -19,7 +19,7 @@ public class UrlAnalyticsController {
 
     @PostMapping("/{shortKey}/urlanalytics")
     public ResponseEntity<String> insertUrlAnalytics(@PathVariable String shortKey){
-        return ResponseEntity.ok(urlAnalyticsService.insertUrlAnalytics(shortKey));
+        return ResponseEntity.ok("Success");
     }
 
 }

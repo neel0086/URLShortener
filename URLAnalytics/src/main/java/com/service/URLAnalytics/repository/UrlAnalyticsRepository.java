@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UrlAnalyticsRepository extends MongoRepository<UrlAnalytics, String> {
+    UrlAnalytics findByShortKey(String shortKey);
 }

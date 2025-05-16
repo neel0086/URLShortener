@@ -1,6 +1,7 @@
 package com.service.URLRedirection.controller;
 
 import com.service.URLRedirection.service.UrlRedirectionService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,8 @@ public class UrlRedirectionController {
     }
 
     @GetMapping("/{shortKey}")
-    public ResponseEntity<String> getOriginalUrl(@PathVariable String shortKey){
-        String originalUrl = urlRedirectionService.getOriginalUrl(shortKey);
+    public ResponseEntity<String> getOriginalUrl(@PathVariable String shortKey, HttpServletRequest request){
+        String originalUrl = urlRedirectionService.getOriginalUrl(shortKey, request.getRemoteAddr());
         if(originalUrl!=null){
             return ResponseEntity.ok(originalUrl);
         }
