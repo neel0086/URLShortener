@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/27.0.5 Chrome/134.0.6998.205 Electron/35.3.0 Safari/537.36" version="27.0.5">
   <diagram name="Page-1" id="Rvay2e51p3kainstZ167">
-    <mxGraphModel dx="1489" dy="906" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1389" dy="845" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -72,8 +72,11 @@
         <mxCell id="4-i48XUBk_vqVD6LSJtd-25" value="URL ANALYTICS" style="rounded=1;whiteSpace=wrap;html=1;fontSize=18;fontColor=#46495D;fontStyle=1;labelBackgroundColor=none;fillColor=#B2C9AB;strokeColor=#788AA3;" parent="36YeDE_W5cZWd7O_SCJh-16" vertex="1">
           <mxGeometry x="334" y="211.6" width="190" height="60" as="geometry" />
         </mxCell>
+        <mxCell id="XV8PQxZMyu0Bra0J3iKS-1" value="" style="points=[];aspect=fixed;html=1;align=center;shadow=0;dashed=0;fillColor=#FF6A00;strokeColor=none;shape=mxgraph.alibaba_cloud.kafka;" vertex="1" parent="36YeDE_W5cZWd7O_SCJh-16">
+          <mxGeometry x="235" y="225" width="56.699999999999996" height="42" as="geometry" />
+        </mxCell>
         <mxCell id="36YeDE_W5cZWd7O_SCJh-18" value="EUREKA SERVER" style="rounded=1;whiteSpace=wrap;html=1;fontSize=18;fontColor=#46495D;fontStyle=1;labelBackgroundColor=none;fillColor=#B2C9AB;strokeColor=#788AA3;" parent="1" vertex="1">
-          <mxGeometry x="264" y="772" width="190" height="60" as="geometry" />
+          <mxGeometry x="256" y="763" width="190" height="60" as="geometry" />
         </mxCell>
         <mxCell id="36YeDE_W5cZWd7O_SCJh-19" value="" style="aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#B2C9AB;shape=mxgraph.mscae.enterprise.lock;labelBackgroundColor=none;fontColor=#46495D;" parent="1" vertex="1">
           <mxGeometry x="472" y="768" width="19" height="24.36" as="geometry" />
