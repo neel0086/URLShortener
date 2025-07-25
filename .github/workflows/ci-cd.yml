@@ -35,11 +35,11 @@ jobs:
     # Step 4: Build all microservices
     - name: Build all services
       run: |
-        cd service-registry && mvn clean package -DskipTests && cd ..
-        cd url-shortener && mvn clean package -DskipTests && cd ..
-        cd url-redirection && mvn clean package -DskipTests && cd ..
-        cd url-analytics && mvn clean package -DskipTests && cd ..
-        cd api-gateway && mvn clean package -DskipTests && cd ..
+        cd ServiceRegistry && mvn clean package -DskipTests && cd ..
+        cd UrlShortener && mvn clean package -DskipTests && cd ..
+        cd UrlRedirection && mvn clean package -DskipTests && cd ..
+        cd UrlAnalytics && mvn clean package -DskipTests && cd ..
+        cd ApiGateway && mvn clean package -DskipTests && cd ..
 
     # Step 5: Build Docker images
     - name: Build Docker images
