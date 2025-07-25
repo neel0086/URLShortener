@@ -44,8 +44,8 @@ jobs:
     # Step 5: Build Docker images
     - name: Build Docker images
       run: |
-        docker build -t urlshortener:latest ./url-shortener
-        docker build -t urlredirection:latest ./url-redirection
-        docker build -t urlanalytics:latest ./url-analytics
-        docker build -t apigateway:latest ./api-gateway
-        docker build -t serviceregistry:latest ./service-registry
+        docker build -t urlshortener:latest ./UrlShortener
+        docker build -t urlredirection:latest ./UrlRedirection
+        docker build -t urlanalytics:latest ./UrlAnalytics
+        docker build -t apigateway:latest ./ApiGateway
+        docker build -t serviceregistry:latest ./ServiceRegistry
