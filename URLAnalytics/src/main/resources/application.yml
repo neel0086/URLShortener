@@ -9,7 +9,7 @@ spring:
       uri: mongodb+srv://neelmehta0086:neel123@cluster0.m2wrdct.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
       database: urlshortener
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka:9092
 
 kafka:
   analytics:
