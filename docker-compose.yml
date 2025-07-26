@@ -3,8 +3,8 @@ version: "3.9"
 services:
   # Eureka Server (ServiceRegistry)
   eureka-server:
-    build:
-      context: ./ServiceRegistry
+    image: neel0086/serviceregistry:latest
+    container_name: eureka-server
     ports:
       - "8761:8761"
     networks:
@@ -13,7 +13,11 @@ services:
       - spring.application.name=service-registry
       - eureka.client.fetch-registry=false
       - eureka.client.register-with-eureka=false
-  
+      - eureka.instance.hostname=eureka-server
+      - eureka.instance.prefer-ip-address=true
+      - server.port=8761
+      - eureka.server.enable-self-preservation=false
+
   redis:
     image: redis:latest
     container_name: redis
@@ -42,13 +46,9 @@ services:
     networks:
       - urlshortener-net
 
-
   # URL Shortener Service
   urlshortener:
-    build:
-      context: ./UrlShortener
-    # ports:
-    #   - "8080:8080"
+    image: neel0086/urlshortener:latest
     networks:
       - urlshortener-net
     depends_on:
@@ -56,12 +56,9 @@ services:
     environment:
       - spring.application.name=URL-SHORTENER
       - eureka.client.serviceUrl.defaultZone=http://eureka-server:8761/eureka/
-  
+
   urlanalytics:
-    build:
-      context: ./UrlAnalytics
-    # ports:
-    #   - "8080:8080"
+    image: neel0086/urlanalytics:latest
     networks:
       - urlshortener-net
     depends_on:
@@ -69,14 +66,10 @@ services:
     environment:
       - spring.application.name=URL-ANALYTICS
       - eureka.client.serviceUrl.defaultZone=http://eureka-server:8761/eureka/
-  
 
   # URL Redirection Service
   urlredirection:
-    build:
-      context: ./UrlRedirection
-    # ports:
-    #   - "8081:8081"
+    image: neel0086/urlredirection:latest
     networks:
       - urlshortener-net
     depends_on:
@@ -84,14 +77,12 @@ services:
     environment:
       - spring.application.name=URL-REDIRECTION
       - eureka.client.serviceUrl.defaultZone=http://eureka-server:8761/eureka/
-      - spring.data.redis.host=redis  # Redis host
-      - spring.data.redis.port=6379    # Redis port
-      - spring.data.redis.password=neel123  # Redis password
-  
-  
+      - spring.data.redis.host=redis
+      - spring.data.redis.port=6379
+      - spring.data.redis.password=neel123
+
   apigateway:
-    build:
-      context: ./ApiGateway
+    image: neel0086/apigateway:latest
     ports:
       - "8084:8084"
     networks:
