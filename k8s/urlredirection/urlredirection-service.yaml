@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: urlredirection-service
+spec:
+  selector:
+    app: urlredirection
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8081
+      nodePort: 30081  # You can choose any port in range 30000–32767

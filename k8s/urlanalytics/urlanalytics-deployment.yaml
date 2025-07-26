@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: urlanalytics-deployment
+  labels:
+    app: urlanalytics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: urlanalytics
+  template:
+    metadata:
+      labels:
+        app: urlanalytics
+    spec:
+      containers:
+        - name: urlanalytics
+          image: neel0086/urlanalytics:latest
+          ports:
+            - containerPort: 8082
+          env:
+            - name: SPRING_DATA_MONGODB_URI
+              value: "mongodb+srv://neelmehta0086:neel123@cluster0.m2wrdct.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+            - name: SPRING_DATA_MONGODB_DATABASE
+              value: "urlshortener"
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka:9092"
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://eureka-server:8761/eureka"

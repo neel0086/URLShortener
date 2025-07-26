@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: urlredirection-deployment
+  labels:
+    app: urlredirection
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: urlredirection
+  template:
+    metadata:
+      labels:
+        app: urlredirection
+    spec:
+      containers:
+        - name: urlredirection
+          image: neel0086/urlredirection:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_DATA_MONGODB_URI
+              value: "mongodb+srv://neelmehta0086:neel123@cluster0.m2wrdct.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+            - name: SPRING_DATA_MONGODB_DATABASE
+              value: "urlshortener"
+            - name: SPRING_REDIS_HOST
+              value: "redis"
+            - name: SPRING_REDIS_PORT
+              value: "6379"
+            - name: SPRING_REDIS_PASSWORD
+              value: "neel123"
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka:9092"
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://eureka-server:8761/eureka"
+
