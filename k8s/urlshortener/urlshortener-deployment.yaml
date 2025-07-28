@@ -15,10 +15,13 @@ spec:
       containers:
         - name: urlshortener
           image: neel0086/urlshortener:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
-            - name: SPRING_APPLICATION_NAME
-              value: "URL-SHORTENER"
+            - name: SPRING_DATA_MONGODB_URI
+              value: "mongodb+srv://neelmehta0086:neel123@cluster0.m2wrdct.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+            - name: SPRING_DATA_MONGODB_DATABASE
+              value: "urlshortener"
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-              value: "http://eureka-service:8761/eureka/"
+              value: "http://eureka-server:8761/eureka"

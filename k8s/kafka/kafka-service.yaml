@@ -4,6 +4,7 @@ metadata:
   name: kafka
 spec:
   ports:
-    - port: 9092
+    - protocol: TCP
+      port: 9092
   selector:
     app: kafka

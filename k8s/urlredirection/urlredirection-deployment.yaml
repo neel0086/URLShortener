@@ -17,6 +17,7 @@ spec:
       containers:
         - name: urlredirection
           image: neel0086/urlredirection:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8081
           env:

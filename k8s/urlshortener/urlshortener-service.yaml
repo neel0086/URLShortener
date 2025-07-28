@@ -8,6 +8,7 @@ spec:
     app: urlshortener
   type: NodePort
   ports:
-    - port: 80
+    - protocol: TCP 
+      port: 8080
       targetPort: 8080
-  type: ClusterIP
+      nodePort: 30082

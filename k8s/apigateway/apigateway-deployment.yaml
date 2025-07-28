@@ -17,6 +17,7 @@ spec:
       containers:
         - name: apigateway
           image: neel0086/apigateway:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8084
           env:
