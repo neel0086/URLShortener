@@ -3,8 +3,8 @@ kind: Service
 metadata:
   name: kafka
 spec:
-  ports:
-    - protocol: TCP
-      port: 9092
   selector:
     app: kafka
+  ports:
+    - port: 9092
+      targetPort: 9092
