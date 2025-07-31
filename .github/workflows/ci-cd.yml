@@ -39,8 +39,9 @@ jobs:
       - name: Get changed files
         id: changes
         run: |
-          CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | tr '\n' ' ')
-          echo "CHANGED=$CHANGED" >> $GITHUB_ENV
+          git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changed.txt
+          cat changed.txt
+          echo "CHANGED=$(paste -sd " " changed.txt)" >> $GITHUB_ENV
 
       - name: Build and Push Changed Services
         run: |
@@ -49,7 +50,7 @@ jobs:
           echo "${CHANGED}"
 
           # Convert comma-separated list to newline-separated
-          FILES=$(echo "${CHANGED}" | tr "," "\n")
+          FILES=$(echo "${CHANGED}" | tr " " "\n")
 
           if echo "$FILES" | grep -q "^ServiceRegistry/"; then
             echo "Building ServiceRegistry..."
