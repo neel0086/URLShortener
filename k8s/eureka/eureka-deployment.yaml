@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: eureka-server
-          image: neel0086/serviceregistry:latest
+          image: neel0086/serviceregistry:eb02e2d
           ports:
             - containerPort: 8761
           env:

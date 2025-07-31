@@ -10,9 +10,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 @Configuration
 public class RedisConfig {
 
-    @Value("spring.data.redis.host")
+    @Value("${spring.data.redis.host}")
     private String redisHost;
-    @Value("spring.data.redis.port")
+    @Value("${spring.data.redis.port}")
     private Integer redisPort;
     @Bean
     public RedisConnectionFactory redisConnectionFactory(){

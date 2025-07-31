@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: urlshortener
-          image: neel0086/urlshortener:latest
+          image: neel0086/urlshortener:eb02e2d
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
