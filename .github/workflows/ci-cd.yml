@@ -9,6 +9,7 @@ on:
 jobs:
   build-and-dockerize:
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout source code
       uses: actions/checkout@v3
@@ -29,61 +30,54 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-maven-
 
-    - name: Build all services
-      run: |
-        cd ServiceRegistry && mvn clean package -DskipTests && cd ..
-        cd URLShortener && mvn clean package -DskipTests && cd ..
-        cd URLRedirection && mvn clean package -DskipTests && cd ..
-        cd URLAnalytics && mvn clean package -DskipTests && cd ..
-        cd ApiGateway && mvn clean package -DskipTests && cd ..
-
     - name: Log in to Docker Hub
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
     - name: Define image tag
       run: echo "IMAGE_TAG=${GITHUB_SHA::7}" >> $GITHUB_ENV
-    
-    - name: "Changed files"
-      run: echo "$CHANGED"
-    - name: Check changed services and build only them
+
+    - name: Get changed files
+      id: changes
+      run: |
+        echo "CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})" >> $GITHUB_ENV
+
+    - name: Build and Push Changed Services
       run: |
         set -e
-        echo "Checking which services changed..."
+        echo "Changed files:"
+        echo "${CHANGED}"
 
-        # Get list of changed files
-        CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
-
-        echo "$CHANGED" | grep "^ServiceRegistry/" && (
+        if echo "${CHANGED}" | grep -q "^ServiceRegistry/"; then
           echo "Building ServiceRegistry..."
           cd ServiceRegistry && mvn clean package -DskipTests && cd ..
           docker build -t ${{ secrets.DOCKER_USERNAME }}/serviceregistry:${{ env.IMAGE_TAG }} ./ServiceRegistry
           docker push ${{ secrets.DOCKER_USERNAME }}/serviceregistry:${{ env.IMAGE_TAG }}
-        )
+        fi
 
-        echo "$CHANGED" | grep "^URLShortener/" && (
+        if echo "${CHANGED}" | grep -q "^URLShortener/"; then
           echo "Building URLShortener..."
           cd URLShortener && mvn clean package -DskipTests && cd ..
           docker build -t ${{ secrets.DOCKER_USERNAME }}/urlshortener:${{ env.IMAGE_TAG }} ./URLShortener
           docker push ${{ secrets.DOCKER_USERNAME }}/urlshortener:${{ env.IMAGE_TAG }}
-        )
+        fi
 
-        echo "$CHANGED" | grep "^URLRedirection/" && (
+        if echo "${CHANGED}" | grep -q "^URLRedirection/"; then
           echo "Building URLRedirection..."
           cd URLRedirection && mvn clean package -DskipTests && cd ..
           docker build -t ${{ secrets.DOCKER_USERNAME }}/urlredirection:${{ env.IMAGE_TAG }} ./URLRedirection
           docker push ${{ secrets.DOCKER_USERNAME }}/urlredirection:${{ env.IMAGE_TAG }}
-        )
+        fi
 
-        echo "$CHANGED" | grep "^URLAnalytics/" && (
+        if echo "${CHANGED}" | grep -q "^URLAnalytics/"; then
           echo "Building URLAnalytics..."
           cd URLAnalytics && mvn clean package -DskipTests && cd ..
           docker build -t ${{ secrets.DOCKER_USERNAME }}/urlanalytics:${{ env.IMAGE_TAG }} ./URLAnalytics
           docker push ${{ secrets.DOCKER_USERNAME }}/urlanalytics:${{ env.IMAGE_TAG }}
-        )
+        fi
 
-        echo "$CHANGED" | grep "^ApiGateway/" && (
+        if echo "${CHANGED}" | grep -q "^ApiGateway/"; then
           echo "Building ApiGateway..."
           cd ApiGateway && mvn clean package -DskipTests && cd ..
           docker build -t ${{ secrets.DOCKER_USERNAME }}/apigateway:${{ env.IMAGE_TAG }} ./ApiGateway
           docker push ${{ secrets.DOCKER_USERNAME }}/apigateway:${{ env.IMAGE_TAG }}
-        )
+        fi
