@@ -41,18 +41,45 @@ jobs:
     - name: Define image tag
       run: echo "IMAGE_TAG=${GITHUB_SHA::7}" >> $GITHUB_ENV
 
-    - name: Build Docker images
+    - name: Check changed services and build only them
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/urlshortener:${{ env.IMAGE_TAG }} ./URLShortener
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/urlredirection:${{ env.IMAGE_TAG }} ./URLRedirection
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/urlanalytics:${{ env.IMAGE_TAG }} ./URLAnalytics
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/apigateway:${{ env.IMAGE_TAG }} ./ApiGateway
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/serviceregistry:${{ env.IMAGE_TAG }} ./ServiceRegistry
+        set -e
+        echo "Checking which services changed..."
 
-    - name: Push Docker images
-      run: |
-        docker push ${{ secrets.DOCKER_USERNAME }}/urlshortener:${{ env.IMAGE_TAG }}
-        docker push ${{ secrets.DOCKER_USERNAME }}/urlredirection:${{ env.IMAGE_TAG }}
-        docker push ${{ secrets.DOCKER_USERNAME }}/urlanalytics:${{ env.IMAGE_TAG }}
-        docker push ${{ secrets.DOCKER_USERNAME }}/apigateway:${{ env.IMAGE_TAG }}
-        docker push ${{ secrets.DOCKER_USERNAME }}/serviceregistry:${{ env.IMAGE_TAG }}
+        # Get list of changed files
+        CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+
+        echo "$CHANGED" | grep "^ServiceRegistry/" && (
+          echo "Building ServiceRegistry..."
+          cd ServiceRegistry && mvn clean package -DskipTests && cd ..
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/serviceregistry:${{ env.IMAGE_TAG }} ./ServiceRegistry
+          docker push ${{ secrets.DOCKER_USERNAME }}/serviceregistry:${{ env.IMAGE_TAG }}
+        )
+
+        echo "$CHANGED" | grep "^URLShortener/" && (
+          echo "Building URLShortener..."
+          cd URLShortener && mvn clean package -DskipTests && cd ..
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/urlshortener:${{ env.IMAGE_TAG }} ./URLShortener
+          docker push ${{ secrets.DOCKER_USERNAME }}/urlshortener:${{ env.IMAGE_TAG }}
+        )
+
+        echo "$CHANGED" | grep "^URLRedirection/" && (
+          echo "Building URLRedirection..."
+          cd URLRedirection && mvn clean package -DskipTests && cd ..
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/urlredirection:${{ env.IMAGE_TAG }} ./URLRedirection
+          docker push ${{ secrets.DOCKER_USERNAME }}/urlredirection:${{ env.IMAGE_TAG }}
+        )
+
+        echo "$CHANGED" | grep "^URLAnalytics/" && (
+          echo "Building URLAnalytics..."
+          cd URLAnalytics && mvn clean package -DskipTests && cd ..
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/urlanalytics:${{ env.IMAGE_TAG }} ./URLAnalytics
+          docker push ${{ secrets.DOCKER_USERNAME }}/urlanalytics:${{ env.IMAGE_TAG }}
+        )
+
+        echo "$CHANGED" | grep "^ApiGateway/" && (
+          echo "Building ApiGateway..."
+          cd ApiGateway && mvn clean package -DskipTests && cd ..
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/apigateway:${{ env.IMAGE_TAG }} ./ApiGateway
+          docker push ${{ secrets.DOCKER_USERNAME }}/apigateway:${{ env.IMAGE_TAG }}
+        )
