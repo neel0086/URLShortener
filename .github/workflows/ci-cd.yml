@@ -42,7 +42,9 @@ jobs:
 
     - name: Define image tag
       run: echo "IMAGE_TAG=${GITHUB_SHA::7}" >> $GITHUB_ENV
-
+    
+    - name: "Changed files"
+      run: echo "$CHANGED"
     - name: Check changed services and build only them
       run: |
         set -e
