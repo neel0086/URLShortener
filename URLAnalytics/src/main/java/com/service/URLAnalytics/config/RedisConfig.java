@@ -1,4 +1,4 @@
-package config;
+package com.service.URLAnalytics.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,17 +8,14 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 @Configuration
 public class RedisConfig {
-
     @Bean
     public RedisConnectionFactory redisConnectionFactory(){
-        return new LettuceConnectionFactory("redis",6379);
-
+        return new LettuceConnectionFactory("redis", 6379);
     }
-,
+
     public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory factory){
         RedisTemplate<String, String> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
         return template;
     }
-
 }

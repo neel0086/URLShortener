@@ -45,6 +45,7 @@ public class UrlRedirectionService {
         }
         return null;
     }
+
     private void sendAnalytics(String shortKey) {
         UrlAnalyticsDto dto = UrlAnalyticsDto.builder()
                 .shortKey(shortKey)

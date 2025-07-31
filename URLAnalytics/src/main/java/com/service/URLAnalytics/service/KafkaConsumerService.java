@@ -4,6 +4,8 @@ import com.service.URLAnalytics.model.UrlAnalytics;
 import com.service.URLAnalytics.repository.UrlAnalyticsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -22,39 +25,39 @@ public class KafkaConsumerService {
     // In-memory buffer to collect shortKey view increments
     private final Map<String, Long> viewCountBuffer = Collections.synchronizedMap(new HashMap<>());
 
+    @Autowired
+    private final RedisTemplate<String, String> redisTemplate;
     @KafkaListener(topics = "${kafka.analytics.topic}", groupId = "analytics-consumer")
     public void consume(UrlAnalytics urlAnalyticsDto) {
-        System.out.println(viewCountBuffer);
         String shortKey = urlAnalyticsDto.getShortKey();
         synchronized (viewCountBuffer) {
-            viewCountBuffer.put(shortKey, viewCountBuffer.getOrDefault(shortKey, 0L) + 1);
+//            viewCountBuffer.put(shortKey, viewCountBuffer.getOrDefault(shortKey, 0L) + 1);
+            redisTemplate.opsForValue().increment("views:"+shortKey, 1);
         }
     }
 
-    @Scheduled(fixedRate = 50000)
-    public void flushBatch() {
-        Map<String, Long> batch;
-        synchronized (viewCountBuffer) {
-            if (viewCountBuffer.isEmpty()) return;
-            batch = new HashMap<>(viewCountBuffer);
-            viewCountBuffer.clear();
-        }
+    @Scheduled(fixedRate = 5000)
+    public void flushBatch(){
+        Set<String> keys = redisTemplate.keys("views:*");
+        if(keys == null || keys.isEmpty()) return;
+        for(String key : keys){
+            String shortKey = key.substring("views:".length());
+            Long increment = Long.valueOf(redisTemplate.opsForValue().get(key));
 
-        for (Map.Entry<String, Long> entry : batch.entrySet()) {
-            String shortKey = entry.getKey();
-            long increment = entry.getValue();
-
-            UrlAnalytics analytics = urlAnalyticsRepository.findByShortKey(shortKey);
-            if (analytics == null) {
-                analytics = new UrlAnalytics();
-                analytics.setShortKey(shortKey);
-                analytics.setViewCount(increment);
-            } else {
-                analytics.setViewCount(analytics.getViewCount() + increment);
+            if(increment == null) continue;
+            UrlAnalytics urlAnalytics = urlAnalyticsRepository.findByShortKey(shortKey);
+            if(urlAnalytics==null){
+                urlAnalytics = new UrlAnalytics();
+                urlAnalytics.setShortKey(shortKey);
+                urlAnalytics.setViewCount(increment);
             }
-
-            urlAnalyticsRepository.save(analytics);
-            log.info("Flushed view count for {}: +{}", shortKey, increment);
+            else{
+                urlAnalytics.setViewCount(urlAnalytics.getViewCount()+increment);
+            }
+            urlAnalyticsRepository.save(urlAnalytics);
+            redisTemplate.delete(key);
+            log.info("Flushed info {}: +{}", shortKey, increment);
         }
     }
+
 }
