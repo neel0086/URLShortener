@@ -1,7 +1,9 @@
 @echo off
 
-echo Building UrlShortener
-cd UrlShortener
+echo Building UrlAnalytics
+cd ..
+cd UrlAnalytics
 call mvn clean package -DskipTests
 cd ..
+
 

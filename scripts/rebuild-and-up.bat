@@ -1,3 +1,4 @@
+cd ..
 @echo off
 echo Shutting down existing containers and volumes...
 docker-compose down -v --remove-orphans
