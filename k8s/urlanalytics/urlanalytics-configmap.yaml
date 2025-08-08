@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: urlanalytics-config
+data:
+  MONGODB_DATABASE: "urlshortener"
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"
+  BOOTSTRAP_SERVERS: "kafka:9092"
+  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8761/eureka"

@@ -22,10 +22,22 @@ spec:
             - containerPort: 8082
           env:
             - name: SPRING_DATA_MONGODB_URI
-              value: "mongodb+srv://neelmehta0086:neel123@cluster0.m2wrdct.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+              valueFrom:
+                secretKeyRef:
+                  name: urlanalytics-secret
+                  key: MONGODB_URI
             - name: SPRING_DATA_MONGODB_DATABASE
-              value: "urlshortener"
+              valueFrom:
+                configMapKeyRef:
+                  name: urlanalytics-config
+                  key: MONGODB_DATABASE
             - name: KAFKA_BOOTSTRAP_SERVERS
-              value: "kafka:9092"
+              valueFrom:
+                configMapKeyRef:
+                  name: urlanalytics-config
+                  key: BOOTSTRAP_SERVERS
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-              value: "http://eureka-server:8761/eureka"
+              valueFrom:
+                configMapKeyRef:
+                  name: urlanalytics-config
+                  key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE

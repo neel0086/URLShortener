@@ -3,11 +3,11 @@ kind: Service
 metadata:
   name: apigateway
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: apigateway
   ports:
     - protocol: TCP
-      port: 8080
+      port: 8084
       targetPort: 8084
       nodePort: 30080  # Exposes it on localhost:30080

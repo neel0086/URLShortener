@@ -22,17 +22,37 @@ spec:
             - containerPort: 8081
           env:
             - name: SPRING_DATA_MONGODB_URI
-              value: "mongodb+srv://neelmehta0086:neel123@cluster0.m2wrdct.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+              valueFrom:
+                secretKeyRef:
+                  name: urlredirection-secret
+                  key: MONGODB_URI
             - name: SPRING_DATA_MONGODB_DATABASE
-              value: "urlshortener"
+              valueFrom:
+                configMapKeyRef:
+                  name: urlredirection-config
+                  key: MONGODB_DATABASE
             - name: SPRING_REDIS_HOST
-              value: "redis"
+              valueFrom:
+                configMapKeyRef:
+                  name: urlredirection-config
+                  key: REDIS_HOST
             - name: SPRING_REDIS_PORT
-              value: "6379"
+              valueFrom:
+                configMapKeyRef:
+                  name: urlredirection-config
+                  key: REDIS_PORT
             - name: SPRING_REDIS_PASSWORD
-              value: "neel123"
+              valueFrom:
+                secretKeyRef:
+                  name: urlredirection-secret
+                  key: REDIS_PASSWORD
             - name: KAFKA_BOOTSTRAP_SERVERS
-              value: "kafka:9092"
+              valueFrom:
+                configMapKeyRef:
+                  name: urlredirection-config
+                  key: BOOTSTRAP_SERVERS
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-              value: "http://eureka-server:8761/eureka"
-
+              valueFrom:
+                configMapKeyRef:
+                  name: urlredirection-config
+                  key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
