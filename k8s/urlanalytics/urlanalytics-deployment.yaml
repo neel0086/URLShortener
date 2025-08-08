@@ -24,20 +24,20 @@ spec:
             - name: SPRING_DATA_MONGODB_URI
               valueFrom:
                 secretKeyRef:
-                  name: urlanalytics-secret
+                  name: common-secret
                   key: MONGODB_URI
             - name: SPRING_DATA_MONGODB_DATABASE
               valueFrom:
                 configMapKeyRef:
-                  name: urlanalytics-config
+                  name: common-config
                   key: MONGODB_DATABASE
             - name: KAFKA_BOOTSTRAP_SERVERS
               valueFrom:
                 configMapKeyRef:
-                  name: urlanalytics-config
+                  name: common-config
                   key: BOOTSTRAP_SERVERS
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
               valueFrom:
                 configMapKeyRef:
-                  name: urlanalytics-config
+                  name: common-config
                   key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE

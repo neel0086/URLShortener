@@ -22,4 +22,7 @@ spec:
             - containerPort: 8084
           env:
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-              value: "http://eureka-server:8761/eureka"
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE

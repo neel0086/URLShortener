@@ -24,35 +24,35 @@ spec:
             - name: SPRING_DATA_MONGODB_URI
               valueFrom:
                 secretKeyRef:
-                  name: urlredirection-secret
+                  name: common-secret
                   key: MONGODB_URI
             - name: SPRING_DATA_MONGODB_DATABASE
               valueFrom:
                 configMapKeyRef:
-                  name: urlredirection-config
+                  name: common-config
                   key: MONGODB_DATABASE
             - name: SPRING_REDIS_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: urlredirection-config
+                  name: common-config
                   key: REDIS_HOST
             - name: SPRING_REDIS_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: urlredirection-config
+                  name: common-config
                   key: REDIS_PORT
             - name: SPRING_REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: urlredirection-secret
+                  name: common-secret
                   key: REDIS_PASSWORD
             - name: KAFKA_BOOTSTRAP_SERVERS
               valueFrom:
                 configMapKeyRef:
-                  name: urlredirection-config
+                  name: common-config
                   key: BOOTSTRAP_SERVERS
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
               valueFrom:
                 configMapKeyRef:
-                  name: urlredirection-config
+                  name: common-config
                   key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
