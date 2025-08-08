@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: apigateway
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     app: apigateway
   ports:
