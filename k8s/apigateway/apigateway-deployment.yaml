@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: apigateway-deployment
+  namespace: url-system
   labels:
     app: apigateway
 spec:
