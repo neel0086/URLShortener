@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: urlredirection
-          image: neel0086/urlredirection:59ef1cd
+          image: neel0086/urlredirection:92dd5aa
           imagePullPolicy: Always
           ports:
             - containerPort: 8081
@@ -32,12 +32,12 @@ spec:
                 configMapKeyRef:
                   name: common-config
                   key: MONGODB_DATABASE
-            - name: SPRING_REDIS_HOST
+            - name: SPRING_DATA_REDIS_HOST
               valueFrom:
                 configMapKeyRef:
                   name: common-config
                   key: REDIS_HOST
-            - name: SPRING_REDIS_PORT
+            - name: SPRING_DATA_REDIS_PORT
               valueFrom:
                 configMapKeyRef:
                   name: common-config
