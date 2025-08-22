@@ -9,7 +9,7 @@ spring:
       uri: mongodb+srv://neelmehta0086:neel123@cluster0.m2wrdct.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
       database: urlshortener
     redis:
-      host: ${SPRING_REDIS_HOST:redis}
+      host: ${REDIS_HOST:redis}
       port: 6379
       password: neel123
   kafka:

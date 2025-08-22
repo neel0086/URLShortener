@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: urlanalytics
-          image: neel0086/urlanalytics:a93daf0
+          image: neel0086/urlanalytics:7ee59b4
           imagePullPolicy: Always
           ports:
             - containerPort: 8082
@@ -37,6 +37,16 @@ spec:
                 configMapKeyRef:
                   name: common-config
                   key: BOOTSTRAP_SERVERS
+            - name: SPRING_REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: REDIS_HOST
+            - name: SPRING_REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: common-config
+                  key: REDIS_PORT
             - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
               valueFrom:
                 configMapKeyRef:
