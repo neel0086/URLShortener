@@ -3,6 +3,7 @@ package com.service.URLRedirection.service;
 import com.netflix.discovery.converters.Auto;
 import com.service.URLRedirection.Repository.UrlRedirectionRepository;
 import com.service.URLRedirection.dto.UrlAnalyticsDto;
+import com.service.URLRedirection.exception.TooManyRequestsException;
 import com.service.URLRedirection.model.UrlMapping;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Service 
@@ -28,7 +30,15 @@ public class UrlRedirectionService {
     private final KafkaProducerService kafkaProducerService;
 
     public String getOriginalUrl(String shortKey,String ip ){
+        String rateKey = "rate:"+ip+":"+shortKey;
+        Long count = redisTemplate.opsForValue().increment(rateKey);
+        if(count==1){
+            redisTemplate.expire(rateKey, Duration.ofSeconds(60));
+        }
 
+        if(count>40){
+            throw new TooManyRequestsException("Rate limit exceeded for this Ip & Url");
+        }
         String cachedUrl = redisTemplate.opsForValue().get(shortKey);
 
         if(cachedUrl != null){
