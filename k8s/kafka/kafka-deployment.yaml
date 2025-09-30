@@ -44,3 +44,7 @@ spec:
                 configMapKeyRef:
                   name: kafka-config
                   key: ALLOW_PLAINTEXT_LISTENER
+      volumes:
+        - name: kafka-storage
+          persistentVolumeClaim:
+            claimName: kafka-pvc 
