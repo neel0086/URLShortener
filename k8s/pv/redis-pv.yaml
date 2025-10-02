@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
-metadata:
-  name: kafka-pv
+metadata: 
+  name: redis-pv
   namespace: infra
 spec:
   capacity:
@@ -9,4 +9,4 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /var/lib/kafka/data
+    path: "/data/redis"  

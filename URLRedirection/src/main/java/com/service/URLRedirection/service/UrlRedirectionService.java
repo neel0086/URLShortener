@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,11 @@ public class UrlRedirectionService {
     @Autowired
     private final KafkaProducerService kafkaProducerService;
 
+    @Value("${POD_NAME:unknown}")
+    private String podName;
+
     public String getOriginalUrl(String shortKey,String ip ){
+        log.info("Request for shortKey={} from IP={} handled by pod={}", shortKey, ip, podName);
         String rateKey = "rate:"+ip+":"+shortKey;
         Long count = redisTemplate.opsForValue().increment(rateKey);
         if(count==1){
