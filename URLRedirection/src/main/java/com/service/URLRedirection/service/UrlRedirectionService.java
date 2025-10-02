@@ -34,9 +34,9 @@ public class UrlRedirectionService {
     private String podName;
 
     public String getOriginalUrl(String shortKey,String ip ){
-        log.info("Request for shortKey={} from IP={} handled by pod={}", shortKey, ip, podName);
         String rateKey = "rate:"+ip+":"+shortKey;
         Long count = redisTemplate.opsForValue().increment(rateKey);
+        log.info("Request for shortKey={} from IP={} handled by pod={}, count={}", shortKey, ip, podName, count);
         if(count==1){
             redisTemplate.expire(rateKey, Duration.ofSeconds(60));
         }
