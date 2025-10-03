@@ -44,7 +44,7 @@ public class UrlRedirectionService {
         if(count>40){
             throw new TooManyRequestsException("Rate limit exceeded for this Ip & Url");
         }
-        String cachedUrl = redisTemplate.opsForValue().get(shortKey);
+        String cachedUrl = redisTemplate.opsForValue().get(rateKey);
 
         if(cachedUrl != null){
             sendAnalytics(shortKey);
@@ -54,7 +54,7 @@ public class UrlRedirectionService {
 
         UrlMapping mapping = urlRedirectionRepository.findByShortKey(shortKey);
         if (mapping!=null){
-            redisTemplate.opsForValue().set(shortKey, mapping.getOriginalUrl());
+            redisTemplate.opsForValue().set(rateKey, mapping.getOriginalUrl());
             sendAnalytics(shortKey);
             return mapping.getOriginalUrl();
         }
