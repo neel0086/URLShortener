@@ -4,15 +4,16 @@ import com.service.URLAnalytics.model.UrlAnalytics;
 import com.service.URLAnalytics.repository.UrlAnalyticsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.Cursor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -20,84 +21,43 @@ import java.util.Map;
 public class KafkaConsumerService {
 
     private final UrlAnalyticsRepository urlAnalyticsRepository;
+
+    // In-memory buffer to collect shortKey view increments
+    private final Map<String, Long> viewCountBuffer = Collections.synchronizedMap(new HashMap<>());
+
+    @Autowired
     private final RedisTemplate<String, String> redisTemplate;
-
-    private static final String VIEWS_PREFIX = "views:";
-
-    /**
-     * Consumes Kafka messages and increments Redis counter
-     */
     @KafkaListener(topics = "${kafka.analytics.topic}", groupId = "analytics-consumer")
     public void consume(UrlAnalytics urlAnalyticsDto) {
         String shortKey = urlAnalyticsDto.getShortKey();
-        if (shortKey == null || shortKey.isEmpty()) {
-            log.warn("Received empty shortKey in analytics message.");
-            return;
+        synchronized (viewCountBuffer) {
+//            viewCountBuffer.put(shortKey, viewCountBuffer.getOrDefault(shortKey, 0L) + 1);
+            redisTemplate.opsForValue().increment("views:"+shortKey, 1);
         }
-        // Atomic increment in Redis
-        redisTemplate.opsForValue().increment(VIEWS_PREFIX + shortKey, 1);
-        log.debug("Incremented views for shortKey={}", shortKey);
     }
 
-    /**
-     * Periodically flushes Redis counters into DB
-     */
     @Scheduled(fixedRate = 5000)
-    public void flushBatch() {
-        Map<String, Long> aggregatedCounts = fetchAllViewCounts();
+    public void flushBatch(){
+        Set<String> keys = redisTemplate.keys("views:*");
+        if(keys == null || keys.isEmpty()) return;
+        for(String key : keys){
+            String shortKey = key.substring("views:".length());
+            Long increment = Long.valueOf(redisTemplate.opsForValue().get(key));
 
-        if (aggregatedCounts.isEmpty()) {
-            return;
-        }
-
-        for (Map.Entry<String, Long> entry : aggregatedCounts.entrySet()) {
-            String shortKey = entry.getKey();
-            Long increment = entry.getValue();
-
-            if (increment == null || increment <= 0) continue;
-
-            UrlAnalytics analytics = urlAnalyticsRepository.findByShortKey(shortKey);
-
-            if (analytics == null) {
-                analytics = new UrlAnalytics();
-                analytics.setShortKey(shortKey);
-                analytics.setViewCount(increment);
-            } else {
-                analytics.setViewCount(analytics.getViewCount() + increment);
+            if(increment == null) continue;
+            UrlAnalytics urlAnalytics = urlAnalyticsRepository.findByShortKey(shortKey);
+            if(urlAnalytics==null){
+                urlAnalytics = new UrlAnalytics();
+                urlAnalytics.setShortKey(shortKey);
+                urlAnalytics.setViewCount(increment);
             }
-
-            urlAnalyticsRepository.save(analytics);
-            redisTemplate.delete(VIEWS_PREFIX + shortKey);
-
-            log.info("Flushed analytics shortKey={}, +{} views", shortKey, increment);
+            else{
+                urlAnalytics.setViewCount(urlAnalytics.getViewCount()+increment);
+            }
+            urlAnalyticsRepository.save(urlAnalytics);
+            redisTemplate.delete(key);
+            log.info("Flushed info {}: +{}", shortKey, increment);
         }
     }
 
-    /**
-     * Scans Redis efficiently (instead of KEYS which blocks Redis)
-     */
-    private Map<String, Long> fetchAllViewCounts() {
-        Map<String, Long> counts = new HashMap<>();
-        try (Cursor<byte[]> cursor = redisTemplate.getConnectionFactory()
-                .getConnection()
-                .scan(ScanOptions.scanOptions().match(VIEWS_PREFIX + "*").count(100).build())) {
-
-            while (cursor.hasNext()) {
-                String key = new String(cursor.next());
-                String shortKey = key.substring(VIEWS_PREFIX.length());
-
-                String value = redisTemplate.opsForValue().get(key);
-                if (value == null) continue;
-
-                try {
-                    counts.put(shortKey, Long.parseLong(value));
-                } catch (NumberFormatException e) {
-                    log.error("Invalid view count value for key={}, value={}", key, value, e);
-                }
-            }
-        } catch (Exception e) {
-            log.error("Error while scanning Redis keys", e);
-        }
-        return counts;
-    }
 }
