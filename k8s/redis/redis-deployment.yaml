@@ -1,12 +1,11 @@
-# Headless service if using stateful set (optional)
+ # Headless service if using stateful set (optional)
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: redis
   namespace: infra
 spec:
-  serviceName: redis
   replicas: 1
   selector:
     matchLabels:
@@ -25,14 +24,3 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "250m"
-          volumeMounts:
-            - name: redis-storage
-              mountPath: /data
-  volumeClaimTemplates:
-      - metadata:
-          name: redis-storage
-        spec:
-          accessModes: ["ReadWriteOnce"]
-          resources:
-            requests:
-              storage: 1Gi

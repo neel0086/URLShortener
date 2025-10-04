@@ -1,12 +1,12 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: zookeeper
   namespace: infra
   labels:
     app: zookeeper
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: zookeeper
@@ -23,9 +23,6 @@ spec:
           env:
             - name: ALLOW_ANONYMOUS_LOGIN
               value: "yes"
-          volumeMounts:
-            - name: zookeeper-storage
-              mountPath: /data
       volumes:
         - name: zookeeper-storage
           persistentVolumeClaim:

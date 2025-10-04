@@ -1,11 +1,13 @@
+# FIX 3: Removed the hardcoded BROKER_ID and CFG_ADVERTISED_LISTENERS 
+# keys to prevent conflicts with the dynamic environment variables in the StatefulSet.
 apiVersion: v1
 kind: ConfigMap
 metadata: 
   name: kafka-config
   namespace: infra
 data:
-  BROKER_ID: "1"
-  CFG_ZOOKEEPER_CONNECT: "zookeeper:2181"
+  # BROKER_ID removed - it is now set dynamically in the StatefulSet
+  CFG_ZOOKEEPER_CONNECT: "zookeeper.infra.svc.cluster.local:2181"
   CFG_LISTENERS: PLAINTEXT://:9092
-  CFG_ADVERTISED_LISTENERS: PLAINTEXT://kafka.infra.svc.cluster.local:9092
+  # CFG_ADVERTISED_LISTENERS removed - it is now set dynamically in the StatefulSet
   ALLOW_PLAINTEXT_LISTENER: "yes"
