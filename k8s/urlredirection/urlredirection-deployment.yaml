@@ -15,6 +15,35 @@ spec:
       labels:
         app: urlredirection
     spec:
+      initContainers:
+        - name: wait-for-dependencies
+          image: busybox:latest
+          command:
+            - sh
+            - -c
+            - |
+              # Hardcoded values verified from common-config ConfigMap.
+              REDIS_HOST="redis.infra.svc.cluster.local"
+              REDIS_PORT="6379"
+              # Ensure you use the correct Kafka bootstrap service name
+              KAFKA_HOST="kafka-bootstrap.infra.svc.cluster.local" 
+              KAFKA_PORT="9092"
+
+              # 1. Wait for Redis
+              echo "Waiting for Redis DNS and port to be available: $REDIS_HOST:$REDIS_PORT"
+              until nc -z $REDIS_HOST $REDIS_PORT; do
+                echo "Redis ($REDIS_HOST:$REDIS_PORT) is unavailable - sleeping"
+                sleep 2
+              done
+              echo "Redis is available! Continuing to Kafka check..."
+
+              # 2. Wait for Kafka
+              echo "Waiting for Kafka: $KAFKA_HOST:$KAFKA_PORT"
+              until nc -z $KAFKA_HOST $KAFKA_PORT; do
+                  echo "Kafka ($KAFKA_HOST:$KAFKA_PORT) is unavailable - sleeping"
+                  sleep 5
+              done
+              echo "Kafka is available! Starting application container..."
       containers:
         - name: urlredirection
           image: neel0086/urlredirection:3236f86
