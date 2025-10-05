@@ -46,7 +46,7 @@ spec:
               echo "Kafka is available! Starting application container..."
       containers:
         - name: urlredirection
-          image: neel0086/urlredirection:3236f86
+          image: neel0086/urlredirection:d2833e4
           imagePullPolicy: Always
           ports:
             - containerPort: 8081
