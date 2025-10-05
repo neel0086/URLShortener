@@ -54,7 +54,7 @@ public class UrlRedirectionService {
 
         UrlMapping mapping = urlRedirectionRepository.findByShortKey(shortKey);
         if (mapping!=null){
-            redisTemplate.opsForValue().set(rateKey, mapping.getOriginalUrl());
+            redisTemplate.opsForValue().set(shortKey, mapping.getOriginalUrl());
             sendAnalytics(shortKey);
             return mapping.getOriginalUrl();
         }

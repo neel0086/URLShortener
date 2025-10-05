@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: urlanalytics
-          image: neel0086/urlanalytics:0cf7e2c
+          image: neel0086/urlanalytics:c5ec624
           imagePullPolicy: Always
           ports:
             - containerPort: 8082
