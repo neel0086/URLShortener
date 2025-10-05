@@ -4,9 +4,9 @@ metadata:
   name: redis
   namespace: infra
 spec:
+  clusterIP: None
   selector:
     app: redis
   ports:
     - port: 6379
       targetPort: 6379
-  type: ClusterIP
